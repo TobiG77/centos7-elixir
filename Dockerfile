@@ -14,12 +14,8 @@ RUN yum -y install --setopt=tsflags=nodocs epel-release wget unzip uuid less bzi
 RUN cd /tmp && \
     wget https://github.com/elixir-lang/elixir/releases/download/v${ELIXIR_VERSION}/Precompiled.zip && \
     unzip -d /usr/local/elixir -x Precompiled.zip && \
-    rm -f /tmp/Precompiled.zip && \
-    mkdir -p /usr/local/share/man1 && \
-    mv -v /usr/local/elixir/man/*1 /usr/local/share/man1 && \
-    mkdir -p /usr/local/bin && \
-    for bin in $ELIXIR_BINARIES ; do \
-      mv -v /usr/local/elixir/bin/${bin} /usr/local/bin ; \
-    done
+    rm -f /tmp/Precompiled.zip
+
+ADD elixir_profile.sh /etc/profile.d/elixir.sh
 
 CMD [ "/bin/bash" ]
