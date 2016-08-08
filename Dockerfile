@@ -6,7 +6,12 @@ ENV ERLANG_VERSION 19.0
 ENV ELIXIR_VERSION 1.3.2
 ENV ELIXIR_BINARIES mix elixirc elixir iex
 
-ENV LANG=en_US.utf8
+# Set the locale(en_US.UTF-8)
+ENV LANG en_US.UTF-8
+ENV LANGUAGE en_US:en
+ENV LC_ALL en_US.UTF-8
+
+ENV DEV_ACCOUNT developer
 
 RUN yum -y install --setopt=tsflags=nodocs epel-release wget unzip uuid less bzip2 && \
     yum -y install http://packages.erlang-solutions.com/erlang-solutions-1.0-1.noarch.rpm && \
@@ -27,7 +32,16 @@ RUN yum -y install nodejs
 RUN npm install -g npm --prefix=/usr/local
 RUN ln -s -f /usr/local/bin/npm /usr/bin/npm
 
-RUN PATH=$PATH:/usr/local/elixir/bin mix local.hex --force
-RUN PATH=$PATH:/usr/local/elixir/bin mix local.rebar --force
+RUN echo "export LANG=en_US.utf-8" >> /etc/bashrc
+RUN echo "export LANGUAGE=en_US:en" >> /etc/bashrc
+RUN echo "export LC_ALL=en_US.UTF-8" >> /etc/bashrc
 
-CMD [ "/bin/bash" ]
+# set up an user
+RUN adduser ${DEV_ACCOUNT} -u 1000 -U -m
+RUN mkdir -p /opt/code && chown ${DEV_ACCOUNT} /opt/code
+RUN ln -s /opt/code /home/${DEV_ACCOUNT}/code
+
+RUN su -lc "PATH=$PATH:/usr/local/elixir/bin mix local.hex --force" ${DEV_ACCOUNT}
+RUN su -lc "PATH=$PATH:/usr/local/elixir/bin mix local.rebar --force" ${DEV_ACCOUNT}
+
+CMD [ "/bin/su", "--login", "developer" ]
