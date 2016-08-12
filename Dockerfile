@@ -13,7 +13,7 @@ ENV LC_ALL en_US.UTF-8
 
 ENV DEV_ACCOUNT developer
 
-RUN yum -y install --setopt=tsflags=nodocs epel-release wget unzip uuid less bzip2 && \
+RUN yum -y install --setopt=tsflags=nodocs epel-release wget unzip uuid less bzip2 git-core inotify-tools && \
     yum -y install http://packages.erlang-solutions.com/erlang-solutions-1.0-1.noarch.rpm && \
     yum -y install esl-erlang-${ERLANG_VERSION} && \
     yum -y update && \
