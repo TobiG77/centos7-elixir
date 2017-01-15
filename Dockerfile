@@ -2,8 +2,8 @@ FROM centos:centos7
 
 MAINTAINER Tobias Gerschner <tobias.gerschner@gmail.com>
 
-ENV ERLANG_VERSION 19.1
-ENV ELIXIR_VERSION 1.3.4
+ENV ERLANG_VERSION 19.2
+ENV ELIXIR_VERSION 1.4.0
 ENV ELIXIR_BINARIES mix elixirc elixir iex
 
 # Set the locale(en_US.UTF-8)
@@ -13,12 +13,15 @@ ENV LC_ALL en_US.UTF-8
 
 ENV DEV_ACCOUNT developer
 
-RUN yum -y install --setopt=tsflags=nodocs epel-release wget unzip uuid less bzip2 git-core inotify-tools && \
+RUN yum clean all && \
+    yum -y install --setopt=tsflags=nodocs epel-release wget unzip uuid less bzip2 git-core inotify-tools && \
     yum -y install http://packages.erlang-solutions.com/erlang-solutions-1.0-1.noarch.rpm && \
     yum -y install esl-erlang-${ERLANG_VERSION} && \
     yum -y update && \
     yum -y reinstall glibc-common glibc && \
     yum clean all
+
+RUN localedef -i en_US -f UTF-8 en_US.UTF-8
 
 RUN cd /tmp && \
     wget https://github.com/elixir-lang/elixir/releases/download/v${ELIXIR_VERSION}/Precompiled.zip && \
@@ -28,6 +31,7 @@ RUN cd /tmp && \
 ADD elixir_profile.sh /etc/profile.d/elixir.sh
 
 RUN curl -sL https://rpm.nodesource.com/setup_6.x | bash -
+RUN yum clean all
 RUN yum -y install nodejs
 RUN npm install -g npm --prefix=/usr/local
 RUN ln -s -f /usr/local/bin/npm /usr/bin/npm
