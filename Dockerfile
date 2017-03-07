@@ -2,8 +2,8 @@ FROM centos:centos7
 
 MAINTAINER Tobias Gerschner <tobias.gerschner@gmail.com>
 
-ENV ERLANG_VERSION 19.2
-ENV ELIXIR_VERSION 1.4.0
+ENV ERLANG_VERSION 19.2.3
+ENV ELIXIR_VERSION 1.4.2
 ENV ELIXIR_BINARIES mix elixirc elixir iex
 
 # Set the locale(en_US.UTF-8)
