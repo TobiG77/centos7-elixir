@@ -2,11 +2,11 @@ FROM centos:centos7
 
 MAINTAINER Tobias Gerschner <tobias.gerschner@gmail.com>
 
-ENV ERLANG_VERSION 19.3
-ENV ELIXIR_VERSION 1.4.4
+ENV ERLANG_VERSION 20.1
+ENV ELIXIR_VERSION 1.5.2
 ENV ELIXIR_BINARIES mix elixirc elixir iex
 
-# Set the locale(en_US.UTF-8)
+# Set the locale(en_US.UTF-8)`
 ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US:en
 ENV LC_ALL en_US.UTF-8
@@ -19,7 +19,8 @@ RUN yum clean all && \
     yum -y install esl-erlang-${ERLANG_VERSION} && \
     yum -y update && \
     yum -y reinstall glibc-common glibc && \
-    yum clean all
+    yum clean all && \
+    find /var/cache/yum -type f -exec rm -f '{}' \;
 
 RUN localedef -i en_US -f UTF-8 en_US.UTF-8
 
