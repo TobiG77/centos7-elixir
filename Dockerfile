@@ -2,16 +2,14 @@ FROM centos:centos7
 
 MAINTAINER Tobias Gerschner <tobias.gerschner@gmail.com>
 
-ENV ERLANG_VERSION 20.1
-ENV ELIXIR_VERSION 1.5.2
+ENV ERLANG_VERSION 20.2.2
+ENV ELIXIR_VERSION 1.6.1
 ENV ELIXIR_BINARIES mix elixirc elixir iex
 
 # Set the locale(en_US.UTF-8)`
 ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US:en
 ENV LC_ALL en_US.UTF-8
-
-ENV DEV_ACCOUNT developer
 
 RUN yum clean all && \
     yum -y install --setopt=tsflags=nodocs epel-release wget unzip uuid less bzip2 git-core inotify-tools && \
@@ -31,22 +29,9 @@ RUN cd /tmp && \
 
 ADD elixir_profile.sh /etc/profile.d/elixir.sh
 
-RUN curl -sL https://rpm.nodesource.com/setup_6.x | bash -
-RUN yum clean all
-RUN yum -y install nodejs
-RUN npm install -g npm --prefix=/usr/local
-RUN ln -s -f /usr/local/bin/npm /usr/bin/npm
-
 RUN echo "export LANG=en_US.utf-8" >> /etc/bashrc
 RUN echo "export LANGUAGE=en_US:en" >> /etc/bashrc
 RUN echo "export LC_ALL=en_US.UTF-8" >> /etc/bashrc
 
-# set up an user
-RUN adduser ${DEV_ACCOUNT} -u 1000 -U -m
-RUN mkdir -p /opt/code && chown ${DEV_ACCOUNT} /opt/code
-RUN ln -s /opt/code /home/${DEV_ACCOUNT}/code
-
-RUN su -lc "PATH=$PATH:/usr/local/elixir/bin mix local.hex --force" ${DEV_ACCOUNT}
-RUN su -lc "PATH=$PATH:/usr/local/elixir/bin mix local.rebar --force" ${DEV_ACCOUNT}
-
-CMD [ "/bin/su", "--login", "developer" ]
+RUN PATH=$PATH:/usr/local/elixir/bin mix local.hex --force
+RUN PATH=$PATH:/usr/local/elixir/bin mix local.rebar --force
