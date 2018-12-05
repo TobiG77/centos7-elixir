@@ -29,9 +29,10 @@ RUN cd /tmp && \
 
 ADD elixir_profile.sh /etc/profile.d/elixir.sh
 
-RUN echo "export LANG=en_US.utf-8" >> /etc/bashrc
-RUN echo "export LANGUAGE=en_US:en" >> /etc/bashrc
-RUN echo "export LC_ALL=en_US.UTF-8" >> /etc/bashrc
+RUN echo "export LANG=en_US.utf-8" >> /etc/environment
+RUN echo "export LANGUAGE=en_US:en" >> /etc/environment
+RUN echo "export LC_ALL=en_US.UTF-8" >> /etc/environment
+RUN echo "export PATH=$PATH:/usr/local/elixir/bin" >> /etc/environment
 
 RUN PATH=$PATH:/usr/local/elixir/bin mix local.hex --force
 RUN PATH=$PATH:/usr/local/elixir/bin mix local.rebar --force
